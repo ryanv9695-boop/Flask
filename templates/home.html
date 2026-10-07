@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Inicial</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 80px 20px 20px;
+            text-align: center;
+        }
+        .toasts {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: calc(100% - 40px);
+            max-width: 340px;
+            z-index: 1000;
+        }
+        .msg {
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: opacity 0.4s, transform 0.4s;
+            animation: entrar 0.4s ease;
+        }
+        .msg.sumindo {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        .sucesso {
+            background: #d4edda;
+            color: #155724;
+        }
+        .erro {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        @keyframes entrar {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toasts">
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% for categoria, mensagem in mensagens %}
+                <div class="msg {{ categoria }}">{{ mensagem }}</div>
+            {% endfor %}
+        {% endwith %}
+    </div>
+
+    <h1>Bem-vindo, {{ usuario }}!</h1>
+    <a href="{{ url_for('logout') }}">Sair</a>
+
+    <script>
+        document.querySelectorAll('.msg').forEach(function (el) {
+            setTimeout(function () {
+                el.classList.add('sumindo');
+                setTimeout(function () { el.remove(); }, 400);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
